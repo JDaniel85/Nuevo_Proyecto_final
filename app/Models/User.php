@@ -50,4 +50,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Membresia::class, 'id_usuario');
     }
+
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class, 'id_usuario');
+    }
+
+    public function clases()
+    {
+        return $this->hasMany(Clase::class, 'id_profesor'); // si es que la clase tiene 'id_empleado'
+    }
 }

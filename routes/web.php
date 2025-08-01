@@ -22,6 +22,9 @@ Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallb
 // Laravel Auth
 Auth::routes();
 
+// Pagos
+Route::resource('pagos', App\Http\Controllers\PagoController::class);
+
 Route::middleware(['auth', ActivityLogger::class])->group(function () {
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
