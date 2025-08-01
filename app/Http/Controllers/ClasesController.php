@@ -26,14 +26,18 @@ class ClasesController extends Controller
     public function index()
     {
         $clase = new Clase();
-        $profesores = User::all();
+         $profesores = User::where('rol', 'Empleado')
+                      ->orderBy('name')
+                      ->get();
         return view('admin.nueva', compact('clase', 'profesores'));
     }
 
     public function edit($id)
     {
         $clase = Clase::findOrFail($id);
-        $profesores = User::all();
+         $profesores = User::where('rol', 'Empleado')
+                      ->orderBy('name')
+                      ->get();
         return view('admin.nueva', compact('clase', 'profesores'));
     }
 
@@ -47,8 +51,9 @@ class ClasesController extends Controller
         ]);
 
         $clase = $request->id == 0 ? new Clase() : Clase::findOrFail($request->id);
+        $fecha  = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $request->fecha);
 
-        $clase->fecha = $request->fecha;
+        $clase->fecha = $fecha;
         $clase->id_profesor = $request->id_profesor;
         $clase->tipo = $request->tipo;
         $clase->lugares = $request->lugares;

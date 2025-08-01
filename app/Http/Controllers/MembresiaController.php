@@ -36,7 +36,9 @@ class MembresiaController extends Controller
     public function create()
     {
         $membresia = new Membresia();
-        $usuarios = User::all();
+         $usuarios = User::where('rol', 'Cliente')
+                      ->orderBy('name')
+                      ->get();
         return view('admin.nueva_membresia', compact('membresia', 'usuarios'));
     }
 
@@ -44,7 +46,9 @@ class MembresiaController extends Controller
     public function edit($id)
     {
         $membresia = Membresia::findOrFail($id);
-        $usuarios = User::all();
+         $usuarios = User::where('rol', 'Cliente')
+                      ->orderBy('name')
+                      ->get();
         return view('admin.nueva_membresia', compact('membresia', 'usuarios'));
     }
 
