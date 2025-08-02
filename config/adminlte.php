@@ -307,14 +307,17 @@ return [
             [
                 'text' => 'Mis Membresias',
                 'route' => 'membresias.cliente',
+                'can' => 'es-cliente',
             ],
             [
                 'text' => 'Lista Completa',
                 'route' => 'membresias.lista',
+                'can' => 'es-admin',
             ],
             [
                 'text' => 'Nueva',
                 'route' => 'membresias.nueva',
+                'can' => 'es-admin',
                 
             ],
         ],

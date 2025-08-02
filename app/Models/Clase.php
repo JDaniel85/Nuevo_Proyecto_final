@@ -41,7 +41,7 @@ class Clase extends Model
     protected function casts(): array
     {
         return [
-            'fecha' => 'date',
+            'fecha' => 'datetime',
             'lugares' => 'integer',
             'lugares_ocupados' => 'integer',
             'lugares_disponibles' => 'integer',
