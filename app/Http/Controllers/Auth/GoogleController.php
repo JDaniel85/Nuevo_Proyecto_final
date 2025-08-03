@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
+
 class GoogleController extends Controller
 {
     public function redirectToGoogle()
@@ -19,25 +20,26 @@ class GoogleController extends Controller
     {
         try {
             $googleUser = Socialite::driver('google')->user();
-
+            
             $user = User::firstOrCreate(
                 ['email' => $googleUser->getEmail()],
                 [
                     'name' => $googleUser->getName(),
                     'password' => bcrypt(Str::random(16)),
-                    'rol' => 'Cliente',
+                    'rol' => "Cliente"
                 ]
             );
 
             Auth::login($user, true);
+            $user->refresh();
 
             // Redireccionar según rol:
         if ($user->rol === 'Admin') {
-            return redirect()->route('admin.dashboard'); 
+            return redirect()->route('usuarios'); 
         } elseif ($user->rol === 'Empleado') {
-            return redirect()->route('empleado.dashboard');
+            return redirect()->route('clases');
         } else {
-            return redirect()->route('cliente.dashboard');
+            return redirect()->route('clases.cliente');
         }
 
         } catch (\Exception $e) {
