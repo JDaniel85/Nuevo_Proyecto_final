@@ -21,14 +21,16 @@ class GoogleController extends Controller
         try {
             $googleUser = Socialite::driver('google')->user();
             
-            $user = User::firstOrCreate(
-                ['email' => $googleUser->getEmail()],
-                [
-                    'name' => $googleUser->getName(),
-                    'password' => bcrypt(Str::random(16)),
-                    'rol' => "Cliente"
-                ]
-            );
+            $user = User::where('email', $googleUser->getEmail())->first();
+
+if (!$user) {
+    $user = new User();
+    $user->name = $googleUser->getName();
+    $user->email = $googleUser->getEmail();
+    $user->password = bcrypt(Str::random(16));
+    $user->rol = 'cliente'; // el mutador lo convierte en "Cliente"
+    $user->save();
+}
 
             Auth::login($user, true);
             $user->refresh();
