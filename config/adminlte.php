@@ -346,12 +346,17 @@ return [
             [
                 'text' => 'Lista',
                 'route' => 'clases',
-                'can' => 'ver-menu-clases',
+                'can' => 'es-admin',
             ],
             [
                 'text' => 'Nuevo',
                 'route' => 'clases.nueva',
                 'can' => 'es-admin',
+            ],
+             [
+                'text' => 'Mis Clases a impartir',
+                'route' => 'clases.clases_impartir',
+                'can' => 'es-instructor',
             ],
         ],
     ],

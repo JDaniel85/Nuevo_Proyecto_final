@@ -9,18 +9,42 @@ use Illuminate\Support\Facades\Auth;
 
 class ClasesController extends Controller
 {
-    public function list()
+    /*public function list()
     {
         $rol = Auth::user()->rol;
         $clases = Clase::with('profesor')->get();
 
         if ($rol === 'Empleado') {
-            return view('empleado.lista', compact('clases'));
+            return view('empleado.clases_impartir', compact('clases'));
         } elseif ($rol === 'Admin') {
             return view('admin.lista', compact('clases'));
         } else {
             abort(403, 'No autorizado');
         }
+    }*/
+
+    public function list()
+    {
+        $rol = Auth::user()->rol;
+        $usuario = Auth::user();
+        if ($rol === 'Empleado') {
+         // Solo sus clases como profesor
+        $clases = Clase::with('profesor')
+                    ->where('id_profesor', $usuario->id)
+                    ->orderBy('fecha', 'desc')
+                    ->get();
+
+        return view('empleado.clases_impartir', compact('clases'));
+    }
+
+        if ($rol === 'Admin') {
+        // Todas las clases
+        $clases = Clase::with('profesor')->orderBy('fecha', 'desc')->get();
+
+        return view('admin.lista', compact('clases'));
+    }
+
+    abort(403, 'No autorizado');
     }
 
     public function index()

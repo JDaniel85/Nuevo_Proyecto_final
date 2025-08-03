@@ -100,6 +100,10 @@ Route::middleware(['auth', ActivityLogger::class])->group(function () {
         Route::get('/clases', [ClasesController::class, 'list'])->name('clases');
     });
 
+     Route::middleware('rol:Empleado')->group(function () {
+        Route::get('/clases_impartir', [ClasesController::class, 'list'])->name('clases.clases_impartir');
+    });
+
     // CLIENTE: ver membresías
     Route::middleware('rol:Cliente,Admin')->group(function () {
         Route::get('/membresias_cliente', [MembresiaController::class, 'list'])->name('membresias.cliente');

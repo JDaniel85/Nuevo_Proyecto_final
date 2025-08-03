@@ -1,6 +1,12 @@
 @extends('adminlte::page')
 
-@section('title', 'Home | SquashPlash')
+@php
+$nombre = Auth::user()->name;
+$rol = Auth::user()->rol;
+@endphp
+
+@section('title', "Home | $rol")
+
 
 @section('content_header')
 @stop
