@@ -37,11 +37,11 @@ if (!$user) {
 
             // Redireccionar según rol:
         if ($user->rol === 'Admin') {
-            return redirect()->route('usuarios'); 
+            return redirect()->route('admin.home'); 
         } elseif ($user->rol === 'Empleado') {
-            return redirect()->route('clases');
+            return redirect()->route('empleado.home');
         } else {
-            return redirect()->route('clases.cliente');
+            return redirect()->route('cliente.home');
         }
 
         } catch (\Exception $e) {

@@ -11,8 +11,38 @@ use App\Http\Controllers\ClasesController;
 use App\Http\Controllers\LogsController;
 use App\Http\Controllers\HomeController;
 
+//ruta para ejecutar el redireccionamiento con el logo de adminlte
+Route::get('/admin/home', function () {
+return view('admin.home');
+})->name('admin.home');
+
+Route::get('/cliente/home', function () {
+return view('cliente.home');
+})->name('cliente.home');
+
+Route::get('/empleado/home', function () {
+return view('empleado.home');
+})->name('empleado.home');
+
+
+
+
 // Página principal y aviso de privacidad
-Route::view('/', 'welcome');
+//Route::view('/', 'welcome');
+Route::get('/', function () {
+if (!Auth::check()) {
+return view('welcome');
+}
+$rol = Auth::user()->rol;
+
+return match ($rol) {
+    'Admin' => redirect()->route('admin.home'),
+    'Empleado' => redirect()->route('empleado.home'),
+    'Cliente' => redirect()->route('cliente.home'),
+    default => view('welcome'),
+};
+});
+
 Route::view('/privacidad', 'privacidad');
 
 // Login con Google
