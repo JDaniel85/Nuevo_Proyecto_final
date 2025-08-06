@@ -26,21 +26,21 @@
                         <div class="col-md-6 col-lg-4 mb-4">
                             <div class="card border-0 shadow-sm h-100" style="border-radius: 1rem;">
                                 <div class="card-header text-white" style="background-color: #00bcd4; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-                                    <h5 class="mb-0"><i class="fas fa-water"></i> Membresía #{{ $membresia->id }}</h5>
+                                    <h5 class="mb-0"><i class="fas fa-water"></i> Membresía</h5>
                                 </div>
                                 <div class="card-body bg-white">
                                     <div class="row text-center">
                                         <div class="col-4">
                                             <h4 class="text-primary">{{ $membresia->clases_adquiridas }}</h4>
-                                            <small class="text-muted">Adquiridas</small>
+                                            <small class="text-muted">Clases Adquiridas</small>
                                         </div>
                                         <div class="col-4">
                                             <h4 class="text-warning">{{ $membresia->clases_ocupadas ?? 0 }}</h4>
-                                            <small class="text-muted">Ocupadas</small>
+                                            <small class="text-muted">Clases que has Ocupado</small>
                                         </div>
                                         <div class="col-4">
                                             <h4 class="text-success">{{ $membresia->clases_disponibles ?? $membresia->clases_adquiridas }}</h4>
-                                            <small class="text-muted">Disponibles</small>
+                                            <small class="text-muted">Clases que te quedan</small>
                                         </div>
                                     </div>
 

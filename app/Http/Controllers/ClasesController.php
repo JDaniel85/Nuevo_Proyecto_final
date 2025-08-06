@@ -22,46 +22,48 @@ class ClasesController extends Controller
             abort(403, 'No autorizado');
         }
     }*/
-
-    public function list()
+ public function list()
     {
-        $rol = Auth::user()->rol;
         $usuario = Auth::user();
-        if ($rol === 'Empleado') {
-         // Solo sus clases como profesor
-        $clases = Clase::with('profesor')
-                    ->where('id_profesor', $usuario->id)
-                    ->orderBy('fecha', 'desc')
-                    ->get();
+        $rol = $usuario->rol;
 
-        return view('empleado.clases_impartir', compact('clases'));
-    }
+        if ($rol === 'Empleado') {
+            $clases = Clase::with('profesor')
+                ->where('id_profesor', $usuario->id)
+                ->orderBy('fecha', 'desc')
+                ->get();
+
+            return view('empleado.clases_impartir', compact('clases'));
+        }
 
         if ($rol === 'Admin') {
-        // Todas las clases
-        $clases = Clase::with('profesor')->orderBy('fecha', 'desc')->get();
+            $clases = Clase::with('profesor')
+                ->orderBy('fecha', 'desc')
+                ->get();
 
-        return view('admin.lista', compact('clases'));
-    }
+            return view('admin.lista', compact('clases'));
+        }
 
-    abort(403, 'No autorizado');
+        abort(403, 'No autorizado');
     }
 
     public function index()
     {
         $clase = new Clase();
-         $profesores = User::where('rol', 'Empleado')
-                      ->orderBy('name')
-                      ->get();
+        $profesores = User::where('rol', 'Empleado')
+            ->orderBy('name')
+            ->get();
+
         return view('admin.nueva', compact('clase', 'profesores'));
     }
 
     public function edit($id)
     {
         $clase = Clase::findOrFail($id);
-         $profesores = User::where('rol', 'Empleado')
-                      ->orderBy('name')
-                      ->get();
+        $profesores = User::where('rol', 'Empleado')
+            ->orderBy('name')
+            ->get();
+
         return view('admin.nueva', compact('clase', 'profesores'));
     }
 
@@ -75,7 +77,7 @@ class ClasesController extends Controller
         ]);
 
         $clase = $request->id == 0 ? new Clase() : Clase::findOrFail($request->id);
-        $fecha  = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $request->fecha);
+        $fecha = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $request->fecha);
 
         $clase->fecha = $fecha;
         $clase->id_profesor = $request->id_profesor;
@@ -101,5 +103,41 @@ class ClasesController extends Controller
 
         return redirect()->route('clases');
     }
+
+   public function formAsignarClase()
+{
+    $usuarios = User::where('rol', 'Cliente')->orderBy('name')->get();
+    $clases = Clase::where('lugares_disponibles', '>', 0)->orderBy('fecha')->get();
+    return view('admin.asignar_clase', compact('usuarios', 'clases'));
+}
+
+public function mostrarDisponibles()
+{
+    $usuario = Auth::user();
+    $rol = $usuario->rol;
+
+    if ($rol === 'Cliente') {
+        // Mostrar clases disponibles para clientes
+        $clases = Clase::with('profesor')
+            ->where('lugares_disponibles', '>', 0)
+            ->where('fecha', '>=', now())
+            ->orderBy('fecha', 'asc')
+            ->get();
+
+        return view('cliente.clases_disponibles', compact('clases'));
+    }
+
+    if ($rol === 'Admin') {
+        // Mostrar todas las clases con lugares disponibles
+        $clases = Clase::with('profesor')
+            ->where('lugares_disponibles', '>', 0)
+            ->orderBy('fecha', 'asc')
+            ->get();
+
+        return view('admin.clases_disponibles', compact('clases'));
+    }
+
+    abort(403, 'No autorizado');
+}
 }
 

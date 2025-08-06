@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\MembresiaController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ClasesController;
+use App\Http\Controllers\ClaseInscripcionController;
 use App\Http\Controllers\LogsController;
 use App\Http\Controllers\HomeController;
 
@@ -104,6 +105,52 @@ Route::middleware(['auth', ActivityLogger::class])->group(function () {
         Route::get('/clases_impartir', [ClasesController::class, 'list'])->name('clases.clases_impartir');
     });
 
+
+
+
+
+
+    // Rutas para alumnos (rol: Cliente)
+Route::middleware(['auth', 'rol:Cliente'])->prefix('cliente')->name('cliente.')->group(function () {
+    // Ver clases disponibles
+    Route::get('/clases', [ClasesController::class, 'mostrarDisponibles'])->name('clases.disponibles');
+
+    Route::get('/mis-clases', [ClaseInscripcionController::class, 'misClases'])->name('clases.mis');
+
+    // Inscribirse en una clase
+    Route::post('/clases/inscribirse/{claseId}', [ClaseInscripcionController::class, 'inscribirse'])->name('clases.inscribirse');
+});
+
+Route::middleware(['auth', 'rol:Admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Listar
+    Route::get('/clases-asignadas', [ClaseInscripcionController::class, 'listarTodasAsignaciones'])
+        ->name('clases.listarAsignadas');
+
+    // Crear
+    Route::get('/asignar-clase', [ClaseInscripcionController::class, 'formAsignarClase'])
+        ->name('clases.formAsignar');
+    Route::post('/asignar-clase', [ClaseInscripcionController::class, 'asignarAUsuario'])
+        ->name('clases.asignar');
+
+    // Editar
+    Route::get('/editar-asignacion/{id}', [ClaseInscripcionController::class, 'formEditarAsignacion'])
+        ->name('clases.formEditar');
+    Route::post('/editar-asignacion/{id}', [ClaseInscripcionController::class, 'editarAsignacion'])
+        ->name('clases.editar');
+
+    // Eliminar
+    Route::delete('/eliminar-asignacion/{id}', [ClaseInscripcionController::class, 'eliminarAsignacion'])
+        ->name('clases.eliminar');
+});
+
+
+
+
+
+
+
+
+    
     // CLIENTE: ver membresías
     Route::middleware('rol:Cliente,Admin')->group(function () {
         Route::get('/membresias_cliente', [MembresiaController::class, 'list'])->name('membresias.cliente');

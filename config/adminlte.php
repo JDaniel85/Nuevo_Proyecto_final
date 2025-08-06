@@ -353,6 +353,26 @@ return [
                 'route' => 'clases.nueva',
                 'can' => 'es-admin',
             ],
+            [
+                'text' => 'Clases Disponibles',
+                'route' => 'cliente.clases.disponibles',
+                'can' => 'es-cliente',
+            ],
+            [
+                'text' => 'Mis clases',
+                'route' => 'cliente.clases.mis',
+                'can' => 'es-cliente',
+            ],
+            [
+                'text' => 'Asignar clases a usuarios',
+                'route' => 'admin.clases.formAsignar',
+                'can' => 'es-admin',
+            ],
+            [
+                'text' => 'Clases asignadas',
+                'route' => 'admin.clases.listarAsignadas',
+                'can' => 'es-admin',
+            ],
              [
                 'text' => 'Mis Clases a impartir',
                 'route' => 'clases.clases_impartir',

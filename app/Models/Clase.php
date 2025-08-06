@@ -55,4 +55,47 @@ class Clase extends Model
     {
         return $this->belongsTo(User::class, 'id_profesor');
     }
+
+    public function alumnos()
+    {
+        return $this->belongsToMany(User::class, 'clase_user')->withTimestamps();
+    }
+
+    public function tieneCupo()
+{
+    return $this->lugares_disponibles > 0;
+}
+
+public function registrarAlumno(User $usuario)
+{
+    // Ya inscrito
+    if ($this->alumnos()->where('user_id', $usuario->id)->exists()) {
+        return false;
+    }
+
+    // Validar cupo
+    if (!$this->tieneCupo()) {
+        return false;
+    }
+
+    // Inscribir
+    $this->alumnos()->attach($usuario->id);
+    $this->increment('lugares_ocupados');
+    $this->decrement('lugares_disponibles');
+
+    return true;
+}
+
+public function liberarCupo(User $usuario)
+{
+    if ($this->alumnos()->where('user_id', $usuario->id)->exists()) {
+        $this->alumnos()->detach($usuario->id);
+        $this->decrement('lugares_ocupados');
+        $this->increment('lugares_disponibles');
+
+        return true;
+    }
+
+    return false;
+}
 }

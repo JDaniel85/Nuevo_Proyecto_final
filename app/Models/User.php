@@ -75,7 +75,17 @@ class User extends Authenticatable
     }
 
     public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \App\Notifications\CustomResetPassword($token));
+    }
+
+    public function clasesInscritas()
+    {
+    return $this->belongsToMany(Clase::class, 'clase_user')->withTimestamps();
+        }
+
+    public function clasesa()
 {
-    $this->notify(new \App\Notifications\CustomResetPassword($token));
+    return $this->belongsToMany(Clase::class, 'clase_user', 'user_id', 'clase_id');
 }
 }
