@@ -113,13 +113,16 @@ Route::middleware(['auth', ActivityLogger::class])->group(function () {
     // Rutas para alumnos (rol: Cliente)
 Route::middleware(['auth', 'rol:Cliente'])->prefix('cliente')->name('cliente.')->group(function () {
     // Ver clases disponibles
-    Route::get('/clases', [ClasesController::class, 'mostrarDisponibles'])->name('clases.disponibles');
+    Route::get('/clases', [ClaseInscripcionController::class, 'mostrarDisponibles'])->name('clases.disponibles');
 
     Route::get('/mis-clases', [ClaseInscripcionController::class, 'misClases'])->name('clases.mis');
 
     // Inscribirse en una clase
     Route::post('/clases/inscribirse/{claseId}', [ClaseInscripcionController::class, 'inscribirse'])->name('clases.inscribirse');
 });
+
+
+
 
 Route::middleware(['auth', 'rol:Admin'])->prefix('admin')->name('admin.')->group(function () {
     // Listar

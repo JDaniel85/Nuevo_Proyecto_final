@@ -6,31 +6,39 @@ use App\Models\Membresia;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MembresiaController extends Controller
 {
     // Listar membresías
-    public function list()
-{
-    $rol = Auth::user()->rol;
+   public function list()
+    {
+        $rol = Auth::user()->rol;
 
-    if ($rol === 'Cliente') {
-        // Los clientes solo ven SUS membresías
-        $membresias = Membresia::where('id_usuario', Auth::id())
-            ->join('users', 'membresias.id_usuario', '=', 'users.id')
-            ->select('membresias.*', 'users.name as cliente')
-            ->get();
-        return view('cliente.lista_membresias', compact('membresias'));
-    } elseif ($rol === 'Admin' || $rol === 'Empleado') {
-        // Admin y Empleado ven TODAS las membresías
-        $membresias = Membresia::join('users', 'membresias.id_usuario', '=', 'users.id')
-            ->select('membresias.*', 'users.name as cliente')
-            ->get();
-        return view('admin.lista_membresias', compact('membresias'));
-    } else {
-        abort(403, 'No autorizado');
+        if ($rol === 'Cliente') {
+            $usuario = Auth::user();
+            
+            // Los datos ya están sincronizados en la base de datos
+            $membresias = Membresia::where('id_usuario', $usuario->id)
+                ->join('users', 'membresias.id_usuario', '=', 'users.id')
+                ->select('membresias.*', 'users.name as cliente')
+                ->get();
+
+            // Ya no se usa, pero mantenemos para compatibilidad con la vista
+            $clasesInscritas = 0;
+
+            return view('cliente.lista_membresias', compact('membresias', 'clasesInscritas'));
+            
+        } elseif ($rol === 'Admin' || $rol === 'Empleado') {
+            $membresias = Membresia::join('users', 'membresias.id_usuario', '=', 'users.id')
+                ->select('membresias.*', 'users.name as cliente')
+                ->get();
+                
+            return view('admin.lista_membresias', compact('membresias'));
+        } else {
+            abort(403, 'No autorizado');
+        }
     }
-}
 
     // Mostrar formulario para nueva membresía
     public function create()
@@ -87,4 +95,44 @@ class MembresiaController extends Controller
         $membresia->delete();
         return redirect()->route('membresias.lista')->with('success', 'Membresía eliminada correctamente.');
     }
+
+    public function contarClasesInscritas($usuarioId)
+{
+    return DB::table('clase_user')
+        ->where('user_id', $usuarioId)
+        ->count();
+}
+
+public function sincronizarMembresia($membresiaId)
+{
+    $membresia = Membresia::findOrFail($membresiaId);
+    
+    // Contar clases ocupadas de esta membresía específica
+    $clasesOcupadas = DB::table('clase_user')
+        ->where('membresia_id', $membresiaId)
+        ->count();
+    
+    // Calcular clases disponibles
+    $clasesDisponibles = max($membresia->clases_adquiridas - $clasesOcupadas, 0);
+    
+    // Actualizar en la base de datos
+    $membresia->update([
+        'clases_ocupadas' => $clasesOcupadas,
+        'clases_disponibles' => $clasesDisponibles
+    ]);
+    
+    return $membresia;
+}
+
+public function sincronizarMembresiasUsuario($usuarioId)
+{
+    $membresias = Membresia::where('id_usuario', $usuarioId)->get();
+    
+    foreach ($membresias as $membresia) {
+        $this->sincronizarMembresia($membresia->id);
+    }
+    
+    return $membresias->fresh(); // Recargar datos actualizados
+}
+    
 }

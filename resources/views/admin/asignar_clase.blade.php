@@ -29,16 +29,24 @@
         </div>
 
         <div class="form-group">
-            <label for="clase_id">Clase:</label>
-            <select name="clase_id" id="clase_id" class="form-control" required>
-                <option value="">---Seleccione una clase---</option>
-                @foreach($clases as $clase)
-                    <option value="{{ $clase->id }}" {{ isset($asignacion) && $asignacion->clase_id == $clase->id ? 'selected' : '' }}>
-                        {{ $clase->tipo }} - |Fecha y Hora: {{ $clase->fecha }}| (Lugares Disponibles: {{ $clase->lugares_disponibles }})
-                    </option>
-                @endforeach
-            </select>
+    <label for="clase_id">Clase:</label>
+
+    @if($clases->isEmpty())
+        <div class="alert alert-warning">
+            <strong>¡Atención!</strong> No hay clases disponibles en este momento. Intenta más tarde o contacta a administración.
         </div>
+    @else
+        <select name="clase_id" id="clase_id" class="form-control" required>
+            <option value="">---Seleccione una clase---</option>
+            @foreach($clases as $clase)
+                <option value="{{ $clase->id }}" {{ isset($asignacion) && $asignacion->clase_id == $clase->id ? 'selected' : '' }}>
+                    {{ $clase->tipo }} - |Fecha y Hora: {{ $clase->fecha }}| (Lugares Disponibles: {{ $clase->lugares_disponibles }})
+                </option>
+            @endforeach
+        </select>
+    @endif
+</div>
+
 
         <button type="submit" class="btn btn-success">{{ isset($asignacion) ? 'Actualizar' : 'Asignar' }}</button>
     </form>

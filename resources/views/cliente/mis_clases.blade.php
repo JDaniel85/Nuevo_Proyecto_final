@@ -135,15 +135,7 @@
                                 <strong>{{ $clase->profesor_nombre }}</strong>
                             </div>
                             
-                            <div class="info-item mb-2">
-                                <i class="fas fa-users text-info"></i>
-                                <strong>Lugares:</strong> {{ $clase->lugares_ocupados }}/{{ $clase->lugares }}
-                                <div class="progress mt-1" style="height: 8px;">
-                                    <div class="progress-bar bg-info" 
-                                         style="width: {{ ($clase->lugares_ocupados / $clase->lugares) * 100 }}%">
-                                    </div>
-                                </div>
-                            </div>
+                          
                             
                             <div class="info-item">
                                 <i class="fas fa-calendar-plus text-info"></i>

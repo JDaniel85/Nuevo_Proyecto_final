@@ -111,7 +111,7 @@ class ClasesController extends Controller
     return view('admin.asignar_clase', compact('usuarios', 'clases'));
 }
 
-public function mostrarDisponibles()
+/*public function mostrarDisponibles()
 {
     $usuario = Auth::user();
     $rol = $usuario->rol;
@@ -138,6 +138,6 @@ public function mostrarDisponibles()
     }
 
     abort(403, 'No autorizado');
-}
+}*/
 }
 

@@ -88,4 +88,37 @@ class User extends Authenticatable
 {
     return $this->belongsToMany(Clase::class, 'clase_user', 'user_id', 'clase_id');
 }
+
+// En tu modelo User.php, agrega estas relaciones:
+
+
+// Método helper para verificar clases disponibles
+public function tieneClasesDisponibles()
+{
+    return $this->membresias()
+                ->where('clases_disponibles', '>', 0)
+                ->exists();
+}
+
+// Método helper para obtener total de clases disponibles
+public function totalClasesDisponibles()
+{
+    return $this->membresias()
+                ->sum('clases_disponibles');
+}
+
+// Método helper para obtener total de clases ocupadas
+public function totalClasesOcupadas()
+{
+    return $this->membresias()
+                ->sum('clases_ocupadas');
+}
+
+// Relación para clases inscritas con información de membresía
+public function clasesConMembresia()
+{
+    return $this->belongsToMany(Clase::class, 'clase_user')
+                ->withPivot('membresia_id', 'created_at')
+                ->withTimestamps();
+}
 }
