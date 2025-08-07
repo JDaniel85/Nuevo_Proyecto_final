@@ -12,10 +12,28 @@ use App\Http\Controllers\ClasesController;
 use App\Http\Controllers\ClaseInscripcionController;
 use App\Http\Controllers\LogsController;
 use App\Http\Controllers\HomeController;
+use App\Models\User;
+use App\Models\Clase;
+use App\Models\Pago;
 
 //ruta para ejecutar el redireccionamiento con el logo de adminlte
 Route::get('/admin/home', function () {
-return view('admin.home');
+    $totalClientes = User::where('rol', 'Cliente')->count();
+    $totalEmpleados = User::where('rol', 'Empleado')->count();
+    $clasesHoy = Clase::whereDate('fecha', now())->count();
+    $ingresosMes = Pago::whereMonth('fecha', now()->month)->sum('monto');
+
+    $alertas = [];
+    $empleadosSinClase = User::where('rol', 'Empleado')
+        ->whereDoesntHave('clases', function($q) {
+            $q->whereDate('fecha', now());
+        })->get();
+
+    foreach ($empleadosSinClase as $empleado) {
+        $alertas[] = "El empleado {$empleado->name} no tiene clases asignadas hoy.";
+    }
+
+    return view('admin.home', compact('totalClientes', 'totalEmpleados', 'clasesHoy', 'ingresosMes', 'alertas'));
 })->name('admin.home');
 
 Route::get('/cliente/home', function () {
@@ -74,6 +92,7 @@ Route::middleware(['auth', ActivityLogger::class])->group(function () {
             Route::get('/nuevo', [UsuarioController::class, 'index'])->name('usuarios.nuevo');
             Route::post('/guardar', [UsuarioController::class, 'store'])->name('usuarios.guardar');
             Route::get('/editar/{id}', [UsuarioController::class, 'edit'])->name('usuarios.editar');
+            Route::put('/actualizar/{id}', [UsuarioController::class, 'update'])->name('usuarios.actualizar');
             Route::delete('/eliminar/{id}', [UsuarioController::class, 'destroy'])->name('usuarios.eliminar');
         });
 
@@ -116,48 +135,38 @@ Route::middleware(['auth', ActivityLogger::class])->group(function () {
 
 
     // Rutas para alumnos (rol: Cliente)
-Route::middleware(['auth', 'rol:Cliente'])->prefix('cliente')->name('cliente.')->group(function () {
-    // Ver clases disponibles
-    Route::get('/clases', [ClaseInscripcionController::class, 'mostrarDisponibles'])->name('clases.disponibles');
+    Route::middleware('rol:Cliente')->prefix('cliente')->name('cliente.')->group(function () {
+        // Ver clases disponibles
+        Route::get('/clases', [ClaseInscripcionController::class, 'mostrarDisponibles'])->name('clases.disponibles');
 
-    Route::get('/mis-clases', [ClaseInscripcionController::class, 'misClases'])->name('clases.mis');
+        Route::get('/mis-clases', [ClaseInscripcionController::class, 'misClases'])->name('clases.mis');
 
-    // Inscribirse en una clase
-    Route::post('/clases/inscribirse/{claseId}', [ClaseInscripcionController::class, 'inscribirse'])->name('clases.inscribirse');
-});
+        // Inscribirse en una clase
+        Route::post('/clases/inscribirse/{claseId}', [ClaseInscripcionController::class, 'inscribirse'])->name('clases.inscribirse');
+    });
 
+    // Rutas de ADMIN para ASIGNAR clases a usuarios
+    Route::middleware('rol:Admin')->prefix('admin')->name('admin.')->group(function () {
+        // Listar
+        Route::get('/clases-asignadas', [ClaseInscripcionController::class, 'listarTodasAsignaciones'])
+            ->name('clases.listarAsignadas');
 
+        // Crear
+        Route::get('/asignar-clase', [ClaseInscripcionController::class, 'formAsignarClase'])
+            ->name('clases.formAsignar');
+        Route::post('/asignar-clase', [ClaseInscripcionController::class, 'asignarAUsuario'])
+            ->name('clases.asignar');
 
+        // Editar
+        Route::get('/editar-asignacion/{id}', [ClaseInscripcionController::class, 'formEditarAsignacion'])
+            ->name('clases.formEditar');
+        Route::post('/editar-asignacion/{id}', [ClaseInscripcionController::class, 'editarAsignacion'])
+            ->name('clases.editar');
 
-Route::middleware(['auth', 'rol:Admin'])->prefix('admin')->name('admin.')->group(function () {
-    // Listar
-    Route::get('/clases-asignadas', [ClaseInscripcionController::class, 'listarTodasAsignaciones'])
-        ->name('clases.listarAsignadas');
-
-    // Crear
-    Route::get('/asignar-clase', [ClaseInscripcionController::class, 'formAsignarClase'])
-        ->name('clases.formAsignar');
-    Route::post('/asignar-clase', [ClaseInscripcionController::class, 'asignarAUsuario'])
-        ->name('clases.asignar');
-
-    // Editar
-    Route::get('/editar-asignacion/{id}', [ClaseInscripcionController::class, 'formEditarAsignacion'])
-        ->name('clases.formEditar');
-    Route::post('/editar-asignacion/{id}', [ClaseInscripcionController::class, 'editarAsignacion'])
-        ->name('clases.editar');
-
-    // Eliminar
-    Route::delete('/eliminar-asignacion/{id}', [ClaseInscripcionController::class, 'eliminarAsignacion'])
-        ->name('clases.eliminar');
-});
-
-
-
-
-
-
-
-
+        // Eliminar
+        Route::delete('/eliminar-asignacion/{id}', [ClaseInscripcionController::class, 'eliminarAsignacion'])
+            ->name('clases.eliminar');
+    });
     
     // CLIENTE: ver membresías
     Route::middleware('rol:Cliente,Admin')->group(function () {

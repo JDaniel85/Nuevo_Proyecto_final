@@ -1,9 +1,9 @@
 // session-timeout.js
 class SessionTimeout {
     constructor() {
-        this.timeoutMinutes = 1; // 3 minutos
-        this.checkInterval = 30000; // Verificar cada 30 segundos
-        this.warningTime = 30; // Mostrar advertencia 1 minuto antes
+        this.timeoutMinutes = 1; // 1 minuto
+        this.checkInterval = 15000; // Verificar cada 15 segundos
+        this.warningTime = 30; // Mostrar advertencia 30 segundos antes
         this.checkTimer = null;
         this.warningShown = false;
         this.lastActivity = Date.now();

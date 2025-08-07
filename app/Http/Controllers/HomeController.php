@@ -32,43 +32,12 @@ class HomeController extends Controller
 
         switch ($rol) {
             case 'Admin':
-                $totalClientes = User::where('rol', 'Cliente')->count();
-                $totalEmpleados = User::where('rol', 'Empleado')->count();
-                $clasesHoy = Clase::whereDate('fecha', now())->count();
-                $ingresosMes = Pago::whereMonth('fecha', now()->month)->sum('monto');
-
-                // Alertas Dinámicas
-                $alertas = [];
-
-                 // Clientes que NO tienen pago este mes
-                /*$clientesSinPago = User::where('rol', 'Cliente')
-                    ->whereDoesntHave('pagos', function($q) {
-                        $q->whereMonth('fecha', now()->month);
-                    })->get();
-
-                foreach ($clientesSinPago as $cliente) {
-                    $alertas[] = "El cliente {$cliente->name} no ha pagado su mensualidad.";
-                }*/
-
-                // Empleados sin clases hoy
-                $empleadosSinClase = User::where('rol', 'Empleado')
-                    ->whereDoesntHave('clases', function($q) {
-                        $q->whereDate('fecha', now());
-                    })->get();
-
-                foreach ($empleadosSinClase as $empleado) {
-                    $alertas[] = "El empleado {$empleado->name} no tiene clases asignadas hoy.";
-                }
-
-
-                return view('admin.home', compact('totalClientes', 'totalEmpleados', 'clasesHoy', 'ingresosMes', 'alertas'));
-
+                return redirect()->route('admin.home');
             case 'Empleado':
-                return view('empleado.home');
-
+                return redirect()->route('empleado.home');
             case 'Cliente':
             default:
-                return view('cliente.home');
+                return redirect()->route('cliente.home');
         }
     }
 }

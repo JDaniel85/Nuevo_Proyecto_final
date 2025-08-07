@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'rol',
     ];
 
     /**
@@ -69,17 +70,14 @@ class User extends Authenticatable
         return $this->hasMany(Pago::class, 'id_usuario');
     }
 
-    public function clases()
-    {
-        return $this->hasMany(Clase::class, 'id_profesor'); // si es que la clase tiene 'id_empleado'
-    }
+
 
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new \App\Notifications\CustomResetPassword($token));
     }
 
-    public function clasesInscritas()
+    public function clases()
     {
     return $this->belongsToMany(Clase::class, 'clase_user')->withTimestamps();
         }

@@ -67,6 +67,32 @@ class UsuarioController extends Controller
         return redirect()->route('usuarios')->with('success', 'Usuario guardado correctamente.');
     }
 
+    public function update(Request $request, $id)
+    {
+        $usuario = User::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'rol' => 'required|string|max:50',
+        ]);
+
+        $usuario->name = $request->name;
+        $usuario->email = $request->email;
+        $usuario->rol = $request->rol;
+
+        if ($request->filled('password')) {
+             $request->validate([
+                'password' => 'confirmed|min:6',
+            ]);
+            $usuario->password = bcrypt($request->password);
+        }
+
+        $usuario->save();
+
+        return redirect()->route('usuarios')->with('success', 'Usuario actualizado correctamente.');
+    }
+
 
     public function destroy($id)
     {

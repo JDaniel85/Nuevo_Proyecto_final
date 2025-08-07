@@ -84,6 +84,56 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
+                            <label for="duracion">Duración *</label>
+                            <input type="text" 
+                                   class="form-control @error('duracion') is-invalid @enderror" 
+                                   id="duracion" 
+                                   name="duracion" 
+                                   value="{{ old('duracion', $clase->duracion) }}" 
+                                   placeholder="Ej: 1 hora, 30 minutos..."
+                                   required>
+                            @error('duracion')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="nivel">Nivel *</label>
+                            <select class="form-control @error('nivel') is-invalid @enderror" id="nivel" name="nivel" required>
+                                <option value="">Seleccione un nivel</option>
+                                <option value="Principiante" {{ old('nivel', $clase->nivel) == 'Principiante' ? 'selected' : '' }}>Principiante</option>
+                                <option value="Intermedio" {{ old('nivel', $clase->nivel) == 'Intermedio' ? 'selected' : '' }}>Intermedio</option>
+                                <option value="Avanzado" {{ old('nivel', $clase->nivel) == 'Avanzado' ? 'selected' : '' }}>Avanzado</option>
+                            </select>
+                            @error('nivel')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="publico_dirigido">Público Dirigido *</label>
+                            <select class="form-control @error('publico_dirigido') is-invalid @enderror" id="publico_dirigido" name="publico_dirigido" required>
+                                <option value="">Seleccione el público</option>
+                                <option value="Hombres" {{ old('publico_dirigido', $clase->publico_dirigido) == 'Hombres' ? 'selected' : '' }}>Hombres</option>
+                                <option value="Mujeres" {{ old('publico_dirigido', $clase->publico_dirigido) == 'Mujeres' ? 'selected' : '' }}>Mujeres</option>
+                                <option value="Mixto" {{ old('publico_dirigido', $clase->publico_dirigido) == 'Mixto' ? 'selected' : '' }}>Mixto</option>
+                            </select>
+                            @error('publico_dirigido')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
                             <label for="lugares">Lugares Totales *</label>
                             <input type="number" 
                                    class="form-control @error('lugares') is-invalid @enderror" 
@@ -97,10 +147,7 @@
                             @enderror
                         </div>
                     </div>
-                </div>
 
-                @if($clase->id)
-                <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="lugares_ocupados">Lugares Ocupados</label>
@@ -125,8 +172,6 @@
                         </div>
                     </div>
                 </div>
-                @endif
-
                 <div class="form-group">
                     <button type="submit" class="btn btn-success">
                         {{ $clase->id ? 'Actualizar Clase' : 'Crear Clase' }}

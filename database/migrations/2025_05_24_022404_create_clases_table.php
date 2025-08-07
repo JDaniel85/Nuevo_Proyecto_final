@@ -17,6 +17,9 @@ return new class extends Migration
             $table->dateTime('fecha');
             $table->unsignedBigInteger('id_profesor');
             $table->string('tipo');
+            $table->string('duracion')->nullable(); // Ej: '1 hora', '30 minutos'
+            $table->enum('nivel', ['Principiante', 'Intermedio', 'Avanzado'])->default('Principiante');
+            $table->enum('publico_dirigido', ['Hombres', 'Mujeres', 'Mixto'])->default('Mixto');
             $table->integer('lugares');
             $table->integer('lugares_ocupados');
             $table->integer('lugares_disponibles');

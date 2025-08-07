@@ -51,7 +51,11 @@ class ClaseInscripcionController extends Controller
     public function formAsignarClase()
     {
         $usuarios = DB::table('users')->where('rol', 'Cliente')->get();
-        $clases = DB::table('clases')->where('lugares_disponibles', '>', 0)->get();
+        $clases = DB::table('clases')
+            ->where('fecha', '>=', now())
+            ->where('lugares_disponibles', '>', 0)
+            ->orderBy('fecha', 'asc')
+            ->get();
         return view('admin.asignar_clase', compact('usuarios', 'clases'));
     }
 
@@ -219,6 +223,9 @@ public function misClases()
                 'clases.lugares',
                 'clases.lugares_ocupados',
                 'clases.lugares_disponibles',
+                'clases.duracion',
+                'clases.nivel',
+                'clases.publico_dirigido',
                 'users.name as profesor_nombre',
                 'clase_user.created_at as fecha_inscripcion',
                 'membresias.id as membresia_id'

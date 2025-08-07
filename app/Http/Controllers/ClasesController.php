@@ -73,16 +73,17 @@ class ClasesController extends Controller
             'fecha' => 'required|date',
             'id_profesor' => 'required|exists:users,id',
             'tipo' => 'required|string|max:100',
+            'duracion' => 'required|string|max:50',
+            'nivel' => 'required|in:Principiante,Intermedio,Avanzado',
+            'publico_dirigido' => 'required|in:Hombres,Mujeres,Mixto',
             'lugares' => 'required|integer|min:1',
         ]);
 
         $clase = $request->id == 0 ? new Clase() : Clase::findOrFail($request->id);
         $fecha = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $request->fecha);
 
+        $clase->fill($request->all());
         $clase->fecha = $fecha;
-        $clase->id_profesor = $request->id_profesor;
-        $clase->tipo = $request->tipo;
-        $clase->lugares = $request->lugares;
 
         if ($request->id == 0) {
             $clase->lugares_ocupados = 0;

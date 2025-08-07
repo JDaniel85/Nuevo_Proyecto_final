@@ -128,16 +128,27 @@
                             
                             <div class="info-item mb-2">
                                 <i class="fas fa-user-tie text-info"></i>
-                                <strong>Instructor:</strong>
+                                <strong>Profesor:</strong> {{ $clase->profesor_nombre }}
                             </div>
-                            <div class="instructor-card mb-3">
-                                <i class="fas fa-medal text-warning"></i>
-                                <strong>{{ $clase->profesor_nombre }}</strong>
+
+                            <div class="info-item mb-2">
+                                <i class="fas fa-clock text-info"></i>
+                                <strong>Duración:</strong> {{ $clase->duracion ?? 'N/A' }}
                             </div>
-                            
-                          
-                            
-                            <div class="info-item">
+
+                            <div class="info-item mb-2">
+                                <i class="fas fa-layer-group text-info"></i>
+                                <strong>Nivel:</strong> {{ $clase->nivel ?? 'N/A' }}
+                            </div>
+
+                            <div class="info-item mb-2">
+                                <i class="fas fa-venus-mars text-info"></i>
+                                <strong>Público:</strong> {{ $clase->publico_dirigido ?? 'N/A' }}
+                            </div>
+
+                            <div class="info-item mb-2">
+                                <i class="fas fa-info-circle text-info"></i>
+                                <strong>Inscripción:</strong> {{ \Carbon\Carbon::parse($clase->fecha_inscripcion)->format('d/m/Y') }}
                                 <i class="fas fa-calendar-plus text-info"></i>
                                 <strong>Inscrito:</strong> {{ \Carbon\Carbon::parse($clase->fecha_inscripcion)->format('d/m/Y') }}
                             </div>
@@ -161,7 +172,7 @@
                         </div>
                         <h3>¡Aún no tienes clases!</h3>
                         <p class="lead">Es hora de sumergirte en el mundo de la natación.</p>
-                        <a href="{{ route('clases.disponibles') }}" class="btn btn-info btn-lg mt-3">
+                        <a href="{{ route('cliente.clases.disponibles') }}" class="btn btn-info btn-lg mt-3">
                             <i class="fas fa-search"></i> Explorar Clases Disponibles
                         </a>
                     </div>

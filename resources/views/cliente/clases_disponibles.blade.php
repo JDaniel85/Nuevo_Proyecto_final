@@ -28,7 +28,7 @@
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <h5><i class="icon fas fa-exclamation-triangle"></i> Sin clases disponibles</h5>
             No tienes clases disponibles en tus membresías. 
-            <a href="{{ route('cliente.membresias') }}" class="alert-link">Ver mis membresías</a>
+            <a href="{{ route('membresias.cliente') }}" class="alert-link">Ver mis membresías</a>
             o contacta con nosotros para adquirir más clases.
         </div>
     @else
@@ -89,7 +89,22 @@
                             
                             <div class="info-item mb-3">
                                 <i class="fas fa-user-tie text-info"></i>
-                                <strong>Instructor:</strong> {{ $clase->profesor->name }}
+                                <strong>Profesor:</strong> {{ $clase->profesor->name ?? 'No asignado' }}
+                            </div>
+
+                            <div class="info-item mb-3">
+                                <i class="fas fa-clock text-info"></i>
+                                <strong>Duración:</strong> {{ $clase->duracion }}
+                            </div>
+
+                            <div class="info-item mb-3">
+                                <i class="fas fa-layer-group text-info"></i>
+                                <strong>Nivel:</strong> {{ $clase->nivel }}
+                            </div>
+
+                            <div class="info-item mb-3">
+                                <i class="fas fa-venus-mars text-info"></i>
+                                <strong>Público:</strong> {{ $clase->publico_dirigido }}
                             </div>
                             
                             <div class="info-item mb-3">
@@ -119,7 +134,7 @@
                                 
                             @else
                                 @if($tieneClasesDisponibles && $clase->lugares_disponibles > 0)
-                                    <form action="{{ route('clases.inscribirse', $clase->id) }}" method="POST" class="d-inline">
+                                    <form action="{{ route('cliente.clases.inscribirse', $clase->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         <button type="submit" class="btn btn-info">
                                             <i class="fas fa-plus"></i> Inscribirse

@@ -18,7 +18,7 @@ return [
     | Establecer el tiempo de vida de la sesión en minutos.
     | Debe ser igual o mayor que el timeout del middleware.
     */
-    'lifetime' => env('SESSION_LIFETIME', 3), // 3 minutos = 180 segundos
+    'lifetime' => env('SESSION_LIFETIME', 1), // 1 minuto = 60 segundos
 
     /*
     |--------------------------------------------------------------------------
