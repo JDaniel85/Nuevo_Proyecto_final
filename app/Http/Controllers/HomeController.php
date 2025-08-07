@@ -41,14 +41,14 @@ class HomeController extends Controller
                 $alertas = [];
 
                  // Clientes que NO tienen pago este mes
-                $clientesSinPago = User::where('rol', 'Cliente')
+                /*$clientesSinPago = User::where('rol', 'Cliente')
                     ->whereDoesntHave('pagos', function($q) {
                         $q->whereMonth('fecha', now()->month);
                     })->get();
 
                 foreach ($clientesSinPago as $cliente) {
                     $alertas[] = "El cliente {$cliente->name} no ha pagado su mensualidad.";
-                }
+                }*/
 
                 // Empleados sin clases hoy
                 $empleadosSinClase = User::where('rol', 'Empleado')
