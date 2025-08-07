@@ -7,6 +7,7 @@ use App\Http\Middleware\ActivityLogger;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\MembresiaController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\SessionController;
 use App\Http\Controllers\ClasesController;
 use App\Http\Controllers\ClaseInscripcionController;
 use App\Http\Controllers\LogsController;
@@ -24,6 +25,10 @@ return view('cliente.home');
 Route::get('/empleado/home', function () {
 return view('empleado.home');
 })->name('empleado.home');
+
+
+//Rutas para manejo de sesión (deben estar dentro del middleware auth)
+
 
 
 

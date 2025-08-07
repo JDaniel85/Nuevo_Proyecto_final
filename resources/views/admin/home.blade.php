@@ -41,16 +41,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card bg-danger text-white">
-            <div class="card-header">
-                <i class="fas fa-dollar-sign"></i> Ingresos Mensuales
-            </div>
-            <div class="card-body">
-                <h3>${{ number_format($ingresosMes, 2) }}</h3>
-            </div>
-        </div>
-    </div>
+    
 </div>
 
 {{-- Gráfica opcional o listado de alertas --}}

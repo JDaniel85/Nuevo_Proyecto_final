@@ -18,6 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         //
+        $middleware->alias([
+            'session.timeout' => \App\Http\Middleware\CheckInactivity::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

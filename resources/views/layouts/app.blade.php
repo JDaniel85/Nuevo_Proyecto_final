@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
     <head>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>SquashPlash | @yield('title')</title>
@@ -52,6 +53,10 @@
                 <p class="text-xs mt-2">Desarrollado por Alan Cid Díaz</p>
             </div>
         </footer>
+
+        @auth
+<script src="{{ asset('js/session-timeout.js') }}"></script>
+@endauth
 
     </body>
 </html>
